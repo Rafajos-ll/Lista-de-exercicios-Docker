@@ -20,12 +20,12 @@ R: Primeiro criaremos uma pasta local no sistema e botaremos o index.html dentro
 
 ```bash
 mkdir site-nginx
-cd nginx-site
+cd site-nginx
 ```
 -agora criaremos o arquivo idex.html:
 
 ```html
-<!-- nginx-site/index.html -->
+<!-- site-nginx/index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
