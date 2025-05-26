@@ -79,5 +79,42 @@ apt install curl -y
 curl https://qualquersite.com
 ```
 
-## 4. Suba um container do MySQL (pode usar a imagem mysql:5.7), utilizando um volume nomeado para armazenar os dados. Crie um banco de dados,pare o container, suba novamente e verifique se os dados persistem.
+## 4. Suba um container do MySQL (pode usar a imagem mysql:5.7), utilizando um volume nomeado para armazenar os dados. Crie um banco de dados,pare o container,suba novamente e verifique se os dados persistem.
    
+-primeiramente criaremos um docker-compose com um volume para armazenar os dados do mysql:
+```yml
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: teste123
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+```
+-Acessaremos o mysql com o seguinte comando:
+```bash
+docker exec -it seu-id mysql -u root -p  
+```
+-Coloque sua senha que foi criada no docker-compose 
+ .criaremos um banco de dados com o seguinte comando:
+ ```SQL
+ CREATE DATABASE lituania;
+ ```
+ -Para mostrar os dados digite o comando a seguir:
+
+```SQL 
+SHOW DATABASES;
+```
+-Sairemos do container com o comando exit e o pararemos.
+
+-Em seguida subiremos o container para verificar a permanência dos dados:
+
+```bash
+docker compose up -d
+```
+-Agora repitiremos o comando dentro do mySQL para mostrar o banco de dados criado anteriormente
