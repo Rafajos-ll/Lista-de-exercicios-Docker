@@ -120,3 +120,21 @@ docker compose up -d
 -Agora repitiremos o comando dentro do mySQL para mostrar o banco de dados criado anteriormente
 
 ![Texto Alternativo](https://cdn.discordapp.com/attachments/890293548870680617/1376680834702114836/image.png?ex=68363570&is=6834e3f0&hm=bc8e1c9b1542e97ef9d56e45d4c1cf6a91f8f2cb492ec7e1e46140256dffa801&)
+
+## 5. Crie um container com a imagem alpine passando uma variável de ambiente chamada MEU_NOME com seu nome. Execute o container e imprima o valor da variável com o comando echo. 
+
+-Criaremos um Dockerfile:
+```dockerfile
+FROM alpine
+ENV MEU_NOME=Rafael
+CMD echo "Ola $MEU_NOME"
+```
+
+-Construiremos o container com o seguinte comando:
+```bash
+docker build -t Sua_tag .
+```
+
+-Executaremos o comando onde ele retornará a variavel MEU_NOME:
+
+![Texto Alternativo](https://cdn.discordapp.com/attachments/890293548870680617/1376684477597749349/image.png?ex=683638d5&is=6834e755&hm=c48202c2054b507b834583b2f8125d9f515d153c1564861ab0adeb1287b29587&)

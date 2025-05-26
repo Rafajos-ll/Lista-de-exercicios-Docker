@@ -1,0 +1,3 @@
+FROM alpine
+ENV MEU_NOME=Rafael
+CMD echo "Ola $MEU_NOME"
