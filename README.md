@@ -14,10 +14,7 @@ docker run meu-echo
 ```
 Onde mostrou os seguinte resultado: "Ola docker"
 
-2. Crie um container com Nginx que sirva uma página HTML customizada 
-(index.html). Monte um volume local com esse arquivo para que ele 
-apareça na raiz do site (/usr/share/nginx/html). Acesse a página via 
-http://localhost.
+## 2. Crie um container com Nginx que sirva uma página HTML customizada (index.html). Monte um volume local com esse arquivo para que ele apareça na raiz do site (/usr/share/nginx/html). Acesse a página via http:://localhost 
 
 R: Primeiro criaremos uma pasta local no sistema e botaremos o index.html dentro dela
 
@@ -51,8 +48,7 @@ docker run --name meu-nginx
 
 em seguida abra o navegador e acesse:http://localhost
 
-3. Inicie um container da imagem ubuntu com um terminal interativo (bash). 
-Navegue pelo sistema de arquivos e instale o pacote curl utilizando apt. 
+## 3. Inicie um container da imagem ubuntu com um terminal interativo (bash).Navegue pelo sistema de arquivos e instale o pacote curl utilizando apt.   
 
 -Primeiramente iniciaremos o container Ubuntu com terminal interativo
 
@@ -83,6 +79,5 @@ apt install curl -y
 curl https://qualquersite.com
 ```
 
-4. Suba um container do MySQL (pode usar a imagem mysql:5.7), utilizando 
-um volume nomeado para armazenar os dados. Crie um banco de dados, 
-pare o container, suba novamente e verifique se os dados persistem.
+## 4. Suba um container do MySQL (pode usar a imagem mysql:5.7), utilizando um volume nomeado para armazenar os dados. Crie um banco de dados,pare o container, suba novamente e verifique se os dados persistem.
+   
