@@ -118,3 +118,5 @@ SHOW DATABASES;
 docker compose up -d
 ```
 -Agora repitiremos o comando dentro do mySQL para mostrar o banco de dados criado anteriormente
+
+![Texto Alternativo](https://cdn.discordapp.com/attachments/890293548870680617/1376680834702114836/image.png?ex=68363570&is=6834e3f0&hm=bc8e1c9b1542e97ef9d56e45d4c1cf6a91f8f2cb492ec7e1e46140256dffa801&)
