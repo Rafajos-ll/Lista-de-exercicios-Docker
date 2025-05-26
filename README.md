@@ -28,7 +28,7 @@ R: Primeiro criaremos uma pasta local no sistema e botaremos o index.html dentro
 mkdir site-nginx
 cd nginx-site
 ```
-agora criaremos o arquivo idex.html:
+-agora criaremos o arquivo idex.html:
 
 ```html
 <!-- nginx-site/index.html -->
@@ -43,7 +43,7 @@ agora criaremos o arquivo idex.html:
 </body>
 </html>
 ```
-Com o arquivo index.html criado rodamos o container com volume,utilizando o seguinte comando docker para rodar o conteiner:
+-Com o arquivo index.html criado rodamos o container com volume,utilizando o seguinte comando docker para rodar o conteiner:
 
 ```bash
 docker run --name meu-nginx 
@@ -56,3 +56,36 @@ em seguida abra o navegador e acesse:http://localhost
 
 3. Inicie um container da imagem ubuntu com um terminal interativo (bash). 
 Navegue pelo sistema de arquivos e instale o pacote curl utilizando apt. 
+
+-Primeiramente iniciaremos o container Ubuntu com terminal interativo
+
+ executaremos este comando:
+ ```bash
+   docker run -it ubuntu bash
+ ```
+-Dentro do nosso container ubuntu utilize os seguintes comandos para navegar por ele:
+
+```bash
+ls /
+cd /etc
+ls
+cd ..
+cd home
+```
+-Atualize os repositórios e instale o curl
+
+Dentro do container,instale o curl com:
+
+```bash
+apt update
+apt install curl -y
+```
+-Para testar se o curl esta funcionando digite o seguinte comando:
+
+```bash
+curl https://qualquersite.com
+```
+
+4. Suba um container do MySQL (pode usar a imagem mysql:5.7), utilizando 
+um volume nomeado para armazenar os dados. Crie um banco de dados, 
+pare o container, suba novamente e verifique se os dados persistem.
