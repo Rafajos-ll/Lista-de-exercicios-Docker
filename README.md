@@ -138,3 +138,108 @@ docker build -t Sua_tag .
 -Executaremos o comando onde ele retornará a variavel MEU_NOME:
 
 ![Texto Alternativo](https://cdn.discordapp.com/attachments/890293548870680617/1376684477597749349/image.png?ex=683638d5&is=6834e755&hm=c48202c2054b507b834583b2f8125d9f515d153c1564861ab0adeb1287b29587&)
+
+## 6. Utilize um multi-stage build para otimizar uma aplicação Go, reduzindo o tamanho da imagem final. Utilize para praticar o projeto GS PING desenvolvido em Golang. 
+
+-Primeiramente usei da documentação do GS PING para fazer a otimização
+
+.Aqui é uma aplicaçao main.go:
+
+```Golang
+package main
+
+import (
+	"net/http"
+	"os"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+)
+
+func main() {
+
+	e := echo.New()
+
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	e.GET("/", func(c echo.Context) error {
+		return c.HTML(http.StatusOK, "Hello, Docker! <3")
+	})
+
+	e.GET("/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
+	})
+
+	httpPort := os.Getenv("PORT")
+	if httpPort == "" {
+		httpPort = "8080"
+	}
+
+	e.Logger.Fatal(e.Start(":" + httpPort))
+}
+
+// Simple implementation of an integer minimum
+// Adapted from: https://gobyexample.com/testing-and-benchmarking
+func IntMin(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+```
+
+-E utilizando do docker multistage para otimizar o tamanho da imagem
+
+.Aqui vou apresentar o dockerfile
+
+```Dockerfile
+# syntax=docker/dockerfile:1
+
+##
+## Build the application from source
+##
+
+FROM golang:1.19 AS build-stage
+
+WORKDIR /golang-teste
+
+COPY golang-teste/go.mod golang-teste/go.sum ./
+RUN go mod download
+
+COPY golang-teste/*.go ./
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
+
+##
+## Run the tests in the container
+##
+
+FROM build-stage AS run-test-stage
+RUN go test -v ./...
+
+##
+## Deploy the application binary into a lean image
+##
+
+FROM gcr.io/distroless/base-debian11 AS build-release-stage
+
+WORKDIR /golang-teste
+
+COPY --from=build-stage /docker-gs-ping /docker-gs-ping
+
+EXPOSE 8080
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/docker-gs-ping"]
+```
+-Informo tambem que coloquei eles dentro de uma pasta entao troquei de onde ele copia os arquivos.
+
+-Por fim quero documentar como ficou o tamanho da imagem depois de utilizar do multi-stage build:
+
+![Texto Interativo](https://cdn.discordapp.com/attachments/890293548870680617/1376992877560987852/image.png?ex=6837580d&is=6836068d&hm=d04bfe57dbb78d82fff664ecf77afb34d3ed2e635b6d29f0cad268707a580131&)
+
+## 7.Crie uma rede Docker personalizada e faça dois containers, um Node.js e um MongoDB, se comunicarem, sugestão, utilize o projeto React Express + Mongo
+
