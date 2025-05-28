@@ -241,5 +241,149 @@ ENTRYPOINT ["/docker-gs-ping"]
 
 ![Texto Interativo](https://cdn.discordapp.com/attachments/890293548870680617/1376992877560987852/image.png?ex=6837580d&is=6836068d&hm=d04bfe57dbb78d82fff664ecf77afb34d3ed2e635b6d29f0cad268707a580131&)
 
-## 7.Crie uma rede Docker personalizada e faça dois containers, um Node.js e um MongoDB, se comunicarem, sugestão, utilize o projeto React Express + Mongo
+## 7. Crie um projeto no docker compose para executar o projeto React Express + Mongo
+
+-Usando o docker compose provido pelo repositório awesome-compose/react-express-mongodb:
+
+```yml
+services:
+  frontend:
+    build:
+      context: frontend
+      target: development
+    ports:
+      - 3000:3000
+    stdin_open: true
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
+    networks:
+      - react-express
+    depends_on:
+      - backend
+
+  backend:
+    restart: always
+    build:
+      context: backend
+      target: development
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - express-mongo
+      - react-express
+    expose: 
+      - 3000
+  mongo:
+    restart: always
+    image: mongo:4.2.0
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - express-mongo
+    expose:
+      - 27017
+networks:
+  react-express:
+  express-mongo:
+
+volumes:
+  mongo_data:
+```
+-Este docker compose cria três containers mongo, backend e frontend. O frontend depende do backend, que por sua vez depende do mongo para iniciar. O container do frontend adiciona todo o conteudo da pasta "frontend" para o contexto dele e mantem as entradas abertas para aceitar a entradas interativas.
+
+## 8. Utilize Docker Compose para configurar uma aplicação com um banco de dados PostgreSQL, use para isso o projeto pgadmin
+
+-Utilizando o docker compose provido pelo repositorio awesome-compose/postgresql-pgadmin:
+
+```yml
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
+    ports:
+      - "5432:5432"
+    restart: always
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+    ports:
+      - "5050:80"
+    restart: always
+```
+-Este docker compose cria os containers postgres e pgadmin que dependem de variaveis de ambiente que estao armazenada no arquivo .env
+
+```sh
+POSTGRES_USER=yourUser
+POSTGRES_PW=changeit
+POSTGRES_DB=postgres
+PGADMIN_MAIL=your@email.com
+PGADMIN_PW=changeit
+```
+## 9. Construa uma imagem baseada no Nginx ou Apache, adicionando um site HTML/CSS estático. Utilize a landing page do Creative Tim para criar uma página moderna hospedada no container.
+
+-Contruimos uma imagem nginx utilizando docker compose:
+```yml
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./material-kit:/usr/share/nginx/html
+```
+-O site foi provido pelo material-kit do repositorio https://github.com/creativetimofficial/material-kit.
+
+## 10. Ao rodar containers com o usuário root, você expõe seu sistema a riscos maiores em caso de comprometimento. Neste exercício, você deverá criar um Dockerfile para uma aplicação simples (como um script Python ou um servidor Node.js) e configurar a imagem para rodar com um usuário não-root. Você precisará:
+
+a. Criar um usuário com useradd ou adduser no Dockerfile.
+
+-Com a nossa aplicaçao em python feita, começaremos a criar o nosso dockerfile:
+
+```dockerfile
+FROM python:3.11-slim
+RUN addgroup --systemappuser && adduser --system --ingroup appuser appuser
+```
+b. Definir esse usuário como o padrão com a instrução USER.
+
+-Feito o começo do nosso dockerfile iremos completa-lo com os seguintes comandos: 
+
+```dockerfile
+FROM python:3.11-slim
+RUN addgroup --system appuser && adduser --system --ingroup appuser appuser
+WORKDIR /app
+RUN pip install --no-cache-dir flask
+COPY app.py /app/app.py
+RUN chown -R appuser:appuser /app
+USER appuser
+EXPOSE 5000
+CMD ["python", "app.py"] 
+```
+c. Construir a imagem e iniciar o container.
+
+-Para contruir a imagem usamos o comando:
+```bash 
+docker build -f Dockerfile.exercicio10 -t suatag .
+```
+-e por fim iniciamos o container com o seguinte comando:
+```bash
+docker run -p 5000:5000 suatag
+```
+d. Verificar se o processo está rodando com o novo usuário usando docker exec <container> whoami.
+
+-agora utilizando o comando fornecido na questão verificamos o processo rodando com o novo usuario:
+
+![Texto Alternativo](https://cdn.discordapp.com/attachments/890293548870680617/1377082470054498315/image.png?ex=6837ab7d&is=683659fd&hm=b93e3a87f0ec7e4ad83b8a1252c67af9a74511cb8e33c0ad95e14382d810f186&)
 
