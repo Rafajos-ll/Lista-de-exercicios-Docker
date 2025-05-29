@@ -387,3 +387,97 @@ d. Verificar se o processo está rodando com o novo usuário usando docker exec 
 
 ![Texto Alternativo](https://cdn.discordapp.com/attachments/890293548870680617/1377082470054498315/image.png?ex=6837ab7d&is=683659fd&hm=b93e3a87f0ec7e4ad83b8a1252c67af9a74511cb8e33c0ad95e14382d810f186&)
 
+## 11. Trivy é uma ferramenta open source para análise de vulnerabilidades em imagens Docker. Neste exercício, você irá analisar uma imagem pública, como python:3.9 ou node:16, em busca de vulnerabilidades conhecidas. Você deverá:
+
+e. Instalar o Trivy na sua máquina (via script ou pacote).
+
+-Aqui veremos os comandos necessarios para instalar o trivy via script:
+```bash
+sudo apt-get install wget apt-transport-https gnupg lsb-release
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy
+```
+f. Rodar trivy image <nome-da-imagem> para analisar.
+
+-Com o comando sugerido na questao, foram analizadas todas as vunerabilidades.
+
+g. Identificar vulnerabilidades com severidade HIGH ou CRITICAL.
+
+-Foram identificadas 144 vulnerabilidades sendo elas de severidade HIGH e CRITICAL.
+
+h. Anotar os pacotes ou bibliotecas afetadas e sugerir possíveis ações (como atualização da imagem base ou substituição de dependências).
+
+-Segue a lista das bibliotecas afetadas:
+
+icu-devtools
+libaom3
+libbluetooth-dev
+libbluetooth3
+libc-bin
+libc-dev-bin
+libc6
+libc6-dev
+libexpat1
+libexpat1-dev
+libharfbuzz0b
+libicu-dev
+libicu72
+libldap-2.5-0
+libopenexr-3-1-30
+libopenexr-dev
+libperl5.36
+libtiff-dev
+libtiff6
+libtiffxx6
+libxml2
+libxml2-dev
+linux-libc-dev
+perl
+perl-base
+perl-modules-5.36
+setuptools
+zlib1g
+zlib1g-dev
+
+-A maioria das vunerabilidades sao corrigidas com novas versões da imagem como python 3.13-slim. Outra solução é procurar a atualização das bibliotecas afetadas.
+
+## 12. Após identificar vulnerabilidades com ferramentas como o Trivy, o próximo passo é corrigi-las. Imagens grandes e genéricas frequentemente trazem bibliotecas desnecessárias e vulneráveis, além de usarem o usuário root por padrão. Neste exercício, você irá trabalhar com um exemplo de Dockerfile com más práticas e aplicar melhorias para construir uma imagem mais segura e enxuta. Identifique as melhorias e gere uma nova versão de Dockerfile 
+
+-Para resolver as vulnerabilidades do flask e de algumas bibliotecas padrao do python foi necessario a mudanca da versao do requirements.txt para uma mais recente e tambem uma nova versao do arquivo dockerfile com o python atualizado pra sua versao mais recente em "slim". Assim com menos bibliotecas, fazendo com que a aplicaçao esteja com menos ou nenhuma vulnerabilidade.
+
+```dockerfile
+FROM python:3.13-slim
+WORKDIR /app 
+COPY requirements.txt . 
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["python", "app.py"]
+```
+
+```txt
+flask==2.3.2
+```
+## 13. Crie um Dockerfile que use a imagem python:3.11-slim, copie um script Python local (app.py) e o execute com CMD. O script pode imprimir a data e hora atual.
+
+a. Crie uma conta no Docker Hub.
+
+-Para criar uma conta no Dockerhub acessamos o seguinte site https://hub.docker.com e uma vez nele no canto superior direito se voce possuir uma conta clique em sign up mas se ainda nao possui la clique em sign in.
+
+b. Faça login pelo terminal com docker login.
+
+-Agora com o login feito conseguimos dar "push" em imagens para o docker hub.
+
+c. Rebuild sua imagem meu-echo e a renomeie no formato seu-usuario/meu-echo:v1
+
+-Reconstrui a imagem com docker build e a tag solicitada.
+
+d. Faça o push da imagem para o Docker Hub.
+
+-Para realizar o push digitei o seguinte comando:
+
+```bash 
+docker push rafajos/meu-echo:v1
+```
+![Texto Alterativo](https://cdn.discordapp.com/attachments/890293548870680617/1377443682462203975/image.png?ex=6838fbe5&is=6837aa65&hm=4dff9085aa1248212ce5a1260839346ad65b5086499d5118d542419792addf28&)
