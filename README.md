@@ -463,7 +463,7 @@ flask==2.3.2
 
 a. Crie uma conta no Docker Hub.
 
--Para criar uma conta no Dockerhub acessamos o seguinte site https://hub.docker.com e uma vez nele no canto superior direito se voce possuir uma conta clique em sign up mas se ainda nao possui la clique em sign in.
+-Para criar uma conta no Dockerhub acessamos o seguinte site https://hub.docker.com e uma vez nele no canto superior direito se voce possuir uma conta clique em sign in mas se ainda nao possui la clique em sign up.
 
 b. Faça login pelo terminal com docker login.
 
